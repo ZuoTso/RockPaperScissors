@@ -1,65 +1,66 @@
 #include <stdio.h>
 #include <math.h>
 
-char player[11][1025]={0};
-char judge[11]={0};
-int player_num = 0;
+char player[11][1025] = {0};
+char judge[11] = {0};
+int playerNumbers = 0;
 int cround;
 
-int who_win (int round) {
-    int winer = 0, one = 0, two = 0;
-    if(round==0)return 1;
-    if (round == 1) {
-        for (int i = two + 1; i <= player_num; i++) {
+int whoWin(int round) {
+    int winer = 0, playerOne = 0, playerTwo = 0;
+    if (round == 0)
+        return 1;
+    else if (round == 1) {
+        for (int i = playerTwo + 1; i <= playerNumbers; i++) {
             if (player[round][i] > 'o' && player[round][i] < 't') {
-                one = i;
+                playerOne = i;
                 break;
             }
         }
-        for (int i = one + 1; i <= player_num; i++) {
+        for (int i = playerOne + 1; i <= playerNumbers; i++) {
             if (player[round][i] > 'o' && player[round][i] < 't') {
-                two = i;
+                playerTwo = i;
                 break;
             }
         }
-        if (player[round][one] == player[round][two]) {
-            switch (judge[cround-round+1]) {
+        if (player[round][playerOne] == player[round][playerTwo]) {
+            switch (judge[cround - round + 1]) {
                 case 's':
-                    winer = one;
+                    winer = playerOne;
                     break;
                 case 'b':
-                    winer = two;
+                    winer = playerTwo;
                     break;
             }
         } else {
-            switch (player[round][one]) {
+            switch (player[round][playerOne]) {
                 case 'r':
-                    switch (player[round][two]) {
+                    switch (player[round][playerTwo]) {
                         case 'p':
-                            winer = two;
+                            winer = playerTwo;
                             break;
                         case 's':
-                            winer = one;
+                            winer = playerOne;
                             break;
                     }
                     break;
                 case 'p':
-                    switch (player[round][two]) {
+                    switch (player[round][playerTwo]) {
                         case 'r':
-                            winer = one;
+                            winer = playerOne;
                             break;
                         case 's':
-                            winer = two;
+                            winer = playerTwo;
                             break;
                     }
                     break;
                 case 's':
-                    switch (player[round][two]) {
+                    switch (player[round][playerTwo]) {
                         case 'p':
-                            winer = one;
+                            winer = playerOne;
                             break;
                         case 'r':
-                            winer = two;
+                            winer = playerTwo;
                             break;
                     }
                     break;
@@ -67,57 +68,57 @@ int who_win (int round) {
         }
         return winer;
     } else {
-        for (int time = (int)pow(2, round) / 2; time > 0; --time) {
-            for (int i = two + 1; i <= player_num; i++) {
+        for (int time = (int) pow(2, round) / 2; time > 0; --time) {
+            for (int i = playerTwo + 1; i <= playerNumbers; i++) {
                 if (player[round][i] > 'o' && player[round][i] < 't') {
-                    one = i;
+                    playerOne = i;
                     break;
                 }
             }
-            for (int i = one + 1; i <= player_num; i++) {
+            for (int i = playerOne + 1; i <= playerNumbers; i++) {
                 if (player[round][i] > 'o' && player[round][i] < 't') {
-                    two = i;
+                    playerTwo = i;
                     break;
                 }
             }
-            if (player[round][one] == player[round][two]) {
+            if (player[round][playerOne] == player[round][playerTwo]) {
                 switch (judge[cround - round + 1]) {
                     case 's':
-                        player[round - 1][one] = player[round][one];
+                        player[round - 1][playerOne] = player[round][playerOne];
                         break;
                     case 'b':
-                        player[round - 1][two] = player[round][two];
+                        player[round - 1][playerTwo] = player[round][playerTwo];
                         break;
                 }
             } else {
-                switch (player[round][one]) {
+                switch (player[round][playerOne]) {
                     case 'r':
-                        switch (player[round][two]) {
+                        switch (player[round][playerTwo]) {
                             case 'p':
-                                player[round - 1][two] = player[round][two];
+                                player[round - 1][playerTwo] = player[round][playerTwo];
                                 break;
                             case 's':
-                                player[round - 1][one] = player[round][one];
+                                player[round - 1][playerOne] = player[round][playerOne];
                                 break;
                         }
                         break;
                     case 'p':
-                        switch (player[round][two]) {
+                        switch (player[round][playerTwo]) {
                             case 'r':
-                                player[round - 1][one] = player[round][one];
+                                player[round - 1][playerOne] = player[round][playerOne];
                                 break;
                             case 's':
-                                player[round - 1][two] = player[round][two];
+                                player[round - 1][playerTwo] = player[round][playerTwo];
                                 break;
                         }
                         break;
                     case 's':
-                        switch (player[round][two]) {
+                        switch (player[round][playerTwo]) {
                             case 'p':
-                                player[round - 1][one] = player[round][one];
+                                player[round - 1][playerOne] = player[round][playerOne];
                                 break;
                             case 'r':
-                                player[round - 1][two] = player[round][two];
+                                player[round - 1][playerTwo] = player[round][playerTwo];
                                 break;
                         }
                         break;
@@ -125,27 +126,35 @@ int who_win (int round) {
             }
         }
         round--;
-        return who_win(round);
+        return whoWin(round);
     }
 }
+
+
+//Rock(r) Paper(p) Scissors(s) game
 int main() {
     int round = 0;
     int temp;
-    scanf("%d", &player_num);
+    scanf("%d", &playerNumbers);
     getchar();
-    temp=player_num;
+    temp = playerNumbers;
+
+    // Count the number of games by single elimination
     while (temp != 1) {
         temp /= 2;
         round++;
     }
-    for (int i = 1; i <= player_num ; i++) {
+
+    for (int i = 1; i <= playerNumbers; i++) {
         scanf("%c", &player[round][i]);
     }
     getchar();
-    for (int i = 1; i <= round ; i++) {
+
+    //If there is a tie, the one with the smaller(s) ID or the larger(b,bigger) ID wins
+    for (int i = 1; i <= round; i++) {
         scanf("%c", &judge[i]);
     }
-    cround=round;
-    printf("%d", who_win(round));
+    cround = round;
+    printf("%d", whoWin(round));
     return 0;
 }
